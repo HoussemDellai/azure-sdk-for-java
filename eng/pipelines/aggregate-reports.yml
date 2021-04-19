@@ -123,12 +123,12 @@ jobs:
         GdnBreakOutputBaseline: baseline
       condition: succeededOrFailed()
       continueOnError: true
+    - pwsh:
+        Get-Content $(Build.SourcesDirectory)\_gdn\publish\CredScan\001\CredScan-matches.sarif | ConvertFrom-Json | ConvertTo-Csv | Out-File $(Build.SourcesDirectory)\.gdn\.r\CredScan\001\CredScan-matches.csv
+      displayName: Add converted csv file for CredScan-matches.sarif
     - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@3
       displayName: 'Publish Security Analysis Logs'
       condition: succeededOrFailed()
-    - pwsh:
-        Get-Content $(Build.SourcesDirectory)\_gdn\publish\CredScan\001\CredScan-matches.sarif | ConvertFrom-Json | ConvertTo-Csv | Out-File $(Build.SourcesDirectory)\_gdn\publish\CredScan\001\CredScan-matches.csv
-      displayName: 
     # Run link verification at the end as it will run no matter the pipeline passing or failing.
     # If this task fails with an error it shouldn't prevent aggregate reports from being generated.
     - template: ../common/pipelines/templates/steps/verify-links.yml

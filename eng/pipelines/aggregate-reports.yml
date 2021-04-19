@@ -109,9 +109,7 @@ jobs:
       displayName: 'Run CredScan'
       inputs:
         suppressionsFile: 'eng\CredScanSuppression.json'
-      condition: succeededOrFailed()
-    - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@3
-      displayName: 'Publish Security Analysis Logs'
+        outputFormat: csv, sarif
       condition: succeededOrFailed()
     - task: securedevelopmentteam.vss-secure-development-tools.build-task-postanalysis.PostAnalysis@2
       displayName: 'Post Analysis'
@@ -126,6 +124,9 @@ jobs:
         GdnBreakOutputBaseline: baseline
       condition: succeededOrFailed()
       continueOnError: true
+    - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@3
+      displayName: 'Publish Security Analysis Logs'
+      condition: succeededOrFailed()
     # Run link verification at the end as it will run no matter the pipeline passing or failing.
     # If this task fails with an error it shouldn't prevent aggregate reports from being generated.
     - template: ../common/pipelines/templates/steps/verify-links.yml

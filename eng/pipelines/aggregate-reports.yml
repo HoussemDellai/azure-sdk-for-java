@@ -124,8 +124,10 @@ jobs:
       condition: succeededOrFailed()
       continueOnError: true
     - pwsh:
-        Write-Host "$(Pipeline.Workspace)"
-        Get-Content $(Pipeline.Workspace)\_gdn\publish\CredScan\001\CredScan-matches.sarif | ConvertFrom-Json | ConvertTo-Csv | Out-File $(Pipeline.Workspace)\.gdn\CredScan-matches.csv
+        Write-Host $(Pipeline.Workspace)
+        $a = Get-Content $(Pipeline.Workspace)\_gdn\publish\CredScan\001\CredScan-matches.sarif
+        Write-Host $a
+        $a | ConvertFrom-Json | ConvertTo-Csv | Out-File $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.csv
       displayName: Add converted csv file for CredScan-matches.sarif
     - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@3
       displayName: 'Publish Security Analysis Logs'

@@ -124,7 +124,24 @@ jobs:
       condition: succeededOrFailed()
       continueOnError: true
     - pwsh:
-        Get-Content $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.sarif | ConvertTo-Csv | Out-File $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.csv
+        $results = (Get-Content $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.sarif)["runs"].results
+        $csvRows = @()
+        $results | ForEach-Object {
+          $csvRows += [pscustomobject]@{
+              rule = $_.rule
+              fingerprints = $_.fingerprints
+              message = $_.message
+              suppressions = $_.suppressions
+              ruleId = $_.ruleId
+              properties = $_.properties
+              rank = $_.rank
+              analysisTarget = $_.analysisTarget
+              ruleIndex = $_.ruleIndex
+              level = $_.level
+              locations = $_.locations
+          }
+        } 
+        $csvRows | Export-Csv -Path $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.csv -NoTypeInformation
       displayName: Add converted csv file for CredScan-matches.sarif
     - task: securedevelopmentteam.vss-secure-development-tools.build-task-publishsecurityanalysislogs.PublishSecurityAnalysisLogs@3
       displayName: 'Publish Security Analysis Logs'

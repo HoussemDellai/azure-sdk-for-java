@@ -124,7 +124,7 @@ jobs:
       condition: succeededOrFailed()
       continueOnError: true
     - pwsh: |
-        $results = (Get-Content $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.sarif | ConvertTo-Json) ["runs"].results
+        $results = (Get-Content $(Pipeline.Workspace)\.gdn\.r\CredScan\001\CredScan-matches.sarif | ConvertTo-Json)["runs"].results
         $csvRows = @()
         $results | ForEach-Object {
           $csvRows += [pscustomobject]@{
